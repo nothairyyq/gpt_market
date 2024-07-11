@@ -9,4 +9,6 @@ import java.util.List;
 //抽奖策略Dao
 public interface IStrategyDao {
     List<Strategy> queryStrategyList();
+
+    Strategy queryStrategyByStrategyId(Long strategyId);
 }
