@@ -9,4 +9,6 @@ import java.util.List;
 //抽奖策略奖品明细配置Dao
 public interface IStrategyAwardDao {
     List<StrategyAward> queryStrategyAwardList();
+
+    List<StrategyAward> queryStrategyAwardListByStrategyId(Long strategyId);
 }
