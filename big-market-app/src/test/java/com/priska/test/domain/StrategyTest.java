@@ -32,9 +32,9 @@ public class StrategyTest {
     private IStrategyDispatch strategyDispatch;
 
     /**
-     * 策略ID；100001L、100002L 装配的时候创建策略表写入到 Redis Map 中
+     * 策略ID；100002L 装配的时候创建策略表写入到 Redis Map 中
      */
-    @Before
+    @Test
     public void test_strategyArmory() {
         boolean success = strategyArmory.assembleLotteryStrategy(100002L);
         log.info("测试结果：{}", success);
@@ -45,6 +45,8 @@ public class StrategyTest {
      */
     @Test
     public void test_getRandomAwardId() {
+        log.info("测试结果：{} - 奖品ID值", strategyDispatch.getRandomAwardId(100002L));
+        log.info("测试结果：{} - 奖品ID值", strategyDispatch.getRandomAwardId(100002L));
         log.info("测试结果：{} - 奖品ID值", strategyDispatch.getRandomAwardId(100002L));
     }
 
@@ -63,7 +65,7 @@ public class StrategyTest {
 
     @Test
     public void test_map() {
-        RMap<Integer, Integer> map = redisService.getMap("strategy_id_100001");
+        RMap<Integer, Integer> map = redisService.getMap("strategy_id_100002");
         map.put(1, 101);
         map.put(2, 101);
         map.put(3, 101);
@@ -75,7 +77,7 @@ public class StrategyTest {
         map.put(9, 104);
         map.put(10, 105);
 
-        log.info("测试结果：{}", redisService.getMap("strategy_id_100001").get(1));
+        log.info("测试结果：{}", redisService.getMap("strategy_id_100002").get(1));
     }
 
     @Test
