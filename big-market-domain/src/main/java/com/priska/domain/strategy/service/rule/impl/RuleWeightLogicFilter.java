@@ -5,6 +5,7 @@ import com.priska.domain.strategy.model.entity.RuleMatterEntity;
 import com.priska.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.domain.strategy.service.annotation.LogicStrategy;
+import com.priska.domain.strategy.service.rule.ILogicFilter;
 import com.priska.domain.strategy.service.rule.factory.DefaultLogicFactory;
 import com.priska.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
@@ -22,7 +23,7 @@ import java.util.*;
 @Slf4j
 @Component
 @LogicStrategy(logicMode = DefaultLogicFactory.LogicModel.RULE_WIGHT)
-public class RuleWeightLogicFilter {
+public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.RaffleBeforeEntity> {
     @Resource
     private IStrategyRepository repository;
     public Long userScore = 4500L;
