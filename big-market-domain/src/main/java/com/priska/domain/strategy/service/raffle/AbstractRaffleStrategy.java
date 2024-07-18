@@ -5,6 +5,7 @@ import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
 import com.priska.domain.strategy.model.entity.RuleActionEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
+import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
@@ -42,6 +43,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         }
 
         //2. 策略查询
+        //根据传入的抽奖因子实体中的策略ID查询策略表或redis缓存中，的策略实体(包括策略id，策略描述，rule_models)
         StrategyEntity strategy = repository.queryStrategyEntityByStrategyId(strategyId);
 
         //3. 抽奖前的规则过滤
@@ -65,10 +67,34 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
         //4. 默认抽奖流程
         Integer awardId = strategyDispatch.getRandomAwardId(strategyId);
+
+
+        //5.拿到奖品Id后，需要判断该奖品是否需要rule_lock规则。
+        //抽奖中：拿到奖品ID时，过滤规则。 抽奖后：扣减完奖品库存后过滤，抽奖中拦截和无库存则走兜底抽奖积分奖品
+        //根据拿到的awardID在仓库层像策略奖品表中获取rule_models字段并植入VO对象中
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVo(strategyId, awardId);
+
+        //6.抽奖中的规则过滤
+        RuleActionEntity<RuleActionEntity.RaffleCenterEntity> ruleActionCenterEntity = this.doCheckRaffleCenterLogic(RaffleFactorEntity.builder()
+                .strategyId(strategyId)
+                .userId(userId)
+                .awardId(awardId)
+                .build(), strategyAwardRuleModelVO.raffleCenterRuleModelList());
+
+        if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionCenterEntity.getCode())){
+            log.info("【临时日志】中奖中规则拦截，通过抽奖后规则 rule_luck_award 走兜底奖励。");
+            return RaffleAwardEntity.builder()
+                    .awardDesc("中将中规则拦截，发放rule_luck_award")
+                    .build();
+        }
+
         return RaffleAwardEntity.builder()
                 .awardId(awardId)
                 .build();
     }
 
     protected abstract RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String... logics);
+    protected abstract RuleActionEntity<RuleActionEntity.RaffleCenterEntity> doCheckRaffleCenterLogic(RaffleFactorEntity raffleFactorEntity, String... logics);
+
+
 }

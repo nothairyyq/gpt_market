@@ -3,6 +3,7 @@ package com.priska.infrastructure.persistent.repository;
 import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.entity.StrategyRuleEntity;
+import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.infrastructure.persistent.dao.IStrategyAwardDao;
 import com.priska.infrastructure.persistent.dao.IStrategyDao;
@@ -139,5 +140,16 @@ public class StrategyRepository implements IStrategyRepository {
         strategyRule.setRuleModel(ruleModel);
 
         return strategyRuleDao.queryStrategyRuleValue(strategyRule);
+    }
+
+    @Override
+    public StrategyAwardRuleModelVO queryStrategyAwardRuleModelVo(Long strategyId, Integer awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        String ruleModels = strategyAwardDao.queryStrategyAwardRuleModels(strategyAward);
+        return StrategyAwardRuleModelVO.builder()
+                .ruleModels(ruleModels)
+                .build();
     }
 }

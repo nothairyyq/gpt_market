@@ -3,6 +3,7 @@ package com.priska.domain.strategy.repository;
 import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.entity.StrategyRuleEntity;
+import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -33,4 +34,6 @@ public interface IStrategyRepository {
 
 
     String queryStrategyRuleValue(Long strategyId, Integer awardId, String ruleModel);
+
+    StrategyAwardRuleModelVO queryStrategyAwardRuleModelVo(Long strategyId, Integer awardId);
 }
