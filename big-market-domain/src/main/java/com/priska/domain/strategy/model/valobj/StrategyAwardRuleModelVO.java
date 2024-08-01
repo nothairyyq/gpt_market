@@ -30,7 +30,7 @@ public class StrategyAwardRuleModelVO {
         List<String> ruleModelList = new ArrayList<>();
         String[] ruleModelValues = ruleModels.split(Constants.SPLIT);
         for (String ruleModelValue : ruleModelValues){
-            if (DefaultLogicFactory.isCenter(ruleModelValue)){
+            if (DefaultLogicFactory.LogicModel.isCenter(ruleModelValue)){
                 ruleModelList.add(ruleModelValue);
             }
         }

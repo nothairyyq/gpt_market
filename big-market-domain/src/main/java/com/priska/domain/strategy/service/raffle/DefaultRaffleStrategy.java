@@ -104,7 +104,7 @@ public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
             RuleMatterEntity ruleMatterEntity = new RuleMatterEntity();
             ruleMatterEntity.setStrategyId(raffleFactorEntity.getStrategyId());
             ruleMatterEntity.setUserId(raffleFactorEntity.getUserId());
-            ruleMatterEntity.setRuleModel(ruleActionEntity.getRuleModel());
+            ruleMatterEntity.setRuleModel(ruleModel);
             ruleMatterEntity.setAwardId(ruleMatterEntity.getAwardId());
             ruleActionEntity = logicFilter.filter(ruleMatterEntity);
             // 非放行结果则顺序过滤
