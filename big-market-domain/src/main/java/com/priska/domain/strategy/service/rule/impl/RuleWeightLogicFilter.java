@@ -31,7 +31,7 @@ public class RuleWeightLogicFilter implements ILogicFilter<RuleActionEntity.Raff
     * 权重规则过滤
     * 权重规则:4000:102,103,104,105 5000:102,103,104,105,106,107
     * 解析数据格式，判断哪个范围符合用户的特定抽奖范围
-    *
+    *如果用户积分是4500，拿到的key就应该是4000:102,103,104,105
     * @param ruleMatterEntity 规则物料实体对象
     * @return 规则行为实体（规则过滤结果）
     * */
