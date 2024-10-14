@@ -46,7 +46,10 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         StrategyEntity strategy = repository.queryStrategyEntityByStrategyId(strategyId);
 
         //3. 抽奖前的规则过滤
-        RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> ruleActionEntity = this.doCheckRaffleBeforeLogic(RaffleFactorEntity.builder().userId(userId).strategyId(strategyId).build(), strategy.ruleModels());
+        RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> ruleActionEntity = this.doCheckRaffleBeforeLogic(RaffleFactorEntity.builder()
+                .userId(userId)
+                .strategyId(strategyId)
+                .build(), strategy.ruleModels());
         if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionEntity.getCode())){
             if (DefaultLogicFactory.LogicModel.RULE_BLACKLIST.getCode().equals(ruleActionEntity.getRuleModel())){
                 //黑名单返回固定奖品id
@@ -73,7 +76,19 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVO(strategyId, awardId);
 
         //6. 抽奖中 - 规则过滤
+        //将只有是抽奖中的规则传入doCheckRaffleCenter函数中
+        RuleActionEntity<RuleActionEntity.RaffleCenterEntity> ruleActionCenterEntity = this.doCheckRaffleCenterLogic(RaffleFactorEntity.builder()
+                .userId(userId)
+                .strategyId(strategyId)
+                .awardId(awardId)
+                .build(),strategyAwardRuleModelVO.raffleCenterRuleModelList());
 
+        if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionCenterEntity.getCode())){
+            log.info("[临时日志]：抽奖中 规则过滤，用户抽奖次数小于ruleValue,走rule_luck_award过滤规则");
+            return RaffleAwardEntity.builder()
+                    .awardDesc("用户抽奖次数小于ruleValue,走rule_luck_award过滤规则")
+                    .build();
+        }
 
         return RaffleAwardEntity.builder()
                 .awardId(awardId)

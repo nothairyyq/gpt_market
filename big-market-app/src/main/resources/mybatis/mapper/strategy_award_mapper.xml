@@ -31,7 +31,7 @@
         where strategy_id = #{strategyId}
     </select>
 
-    <select id="queryStrategyAwardRuleModels" parameterType="com.priska.infrastructure.persistent.po" resultType="java.lang.String">
+    <select id="queryStrategyAwardRuleModels" parameterType="com.priska.infrastructure.persistent.po.StrategyAward" resultType="java.lang.String">
         select rule_models from strategy_award
         where strategy_id = #{strategyId} and award_id = #{awardId}
     </select>

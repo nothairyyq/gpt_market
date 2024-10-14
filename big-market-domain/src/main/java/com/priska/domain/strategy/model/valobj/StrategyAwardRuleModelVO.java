@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * @program: IntelliJ IDEA
- * @description: 抽奖策略规则 的规则值队形，没有唯一ID,仅限于从数据库中查询对象
+ * @description: 抽奖策略规则 的规则值对象，没有唯一ID,仅限于从数据库中查询对象
  * @author: Priska
  * @create: 2024-10-13
  */
@@ -27,6 +27,17 @@ public class StrategyAwardRuleModelVO {
         String[] ruleModelValues = ruleModels.split(Constants.SPLIT);
         for (String ruleModelValue : ruleModelValues){
             if(DefaultLogicFactory.LogicModel.isCenter(ruleModelValue)){
+                ruleModelList.add(ruleModelValue);
+            }
+        }
+        return ruleModelList.toArray(new String[0]);
+    }
+
+    public String[] raffleAfterRuleModelList() {
+        List<String> ruleModelList = new ArrayList<>();
+        String[] ruleModelValues = ruleModels.split(Constants.SPLIT);
+        for (String ruleModelValue : ruleModelValues) {
+            if (DefaultLogicFactory.LogicModel.isAfter(ruleModelValue)) {
                 ruleModelList.add(ruleModelValue);
             }
         }
