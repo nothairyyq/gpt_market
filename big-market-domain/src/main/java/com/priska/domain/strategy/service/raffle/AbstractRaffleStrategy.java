@@ -5,6 +5,7 @@ import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
 import com.priska.domain.strategy.model.entity.RuleActionEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
+import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
@@ -65,10 +66,20 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
 
         //4. 默认抽奖流程
         Integer awardId = strategyDispatch.getRandomAwardId(strategyId);
+
+        //5.拿到奖品id后，查询对应的奖品规则
+        //抽奖中：awardId 对应的 ruleModel有可能的rule_lock和 rule_luck_award进行次数规则过滤
+        //抽奖后：扣减完奖品库存后过滤，抽奖中拦截和无库存走兜底奖品
+        StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVO(strategyId, awardId);
+
+        //6. 抽奖中 - 规则过滤
+
+
         return RaffleAwardEntity.builder()
                 .awardId(awardId)
                 .build();
     }
 
     protected abstract RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> doCheckRaffleBeforeLogic(RaffleFactorEntity raffleFactorEntity, String... logics);
+    protected abstract RuleActionEntity<RuleActionEntity.RaffleCenterEntity> doCheckRaffleCenterLogic(RaffleFactorEntity raffleFactorEntity, String... logics);
 }
