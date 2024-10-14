@@ -14,9 +14,8 @@
 
 
     <select id="queryStrategyList" resultMap="dataMap">
-        SELECT strategy_id, strategy_desc
+        SELECT strategy_id, strategy_desc, rule_models
         FROM strategy
-        limit 1
     </select>
 
     <select id="queryStrategyByStrategyId" parameterType="java.lang.Long" resultMap="dataMap">

@@ -93,7 +93,7 @@ public class StrategyArmoryDispatch implements  IStrategyArmory, IStrategyDispat
         }
 
         //7. 存放到redis中
-        repository.storeStrategyAwardRateSearchTable(key, rateRange, shuffleStrategyAwardRateSearchTable);
+        repository.storeStrategyAwardRateSearchTable(key, new BigDecimal(shuffleStrategyAwardRateSearchTable.size()), shuffleStrategyAwardRateSearchTable);
         return true;
     }
     @Override
