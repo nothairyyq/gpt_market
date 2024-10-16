@@ -1,4 +1,4 @@
-package com.priska.domain.strategy.service.rule;
+package com.priska.domain.strategy.service.rule.filter;
 
 import com.priska.domain.strategy.model.entity.RuleActionEntity;
 import com.priska.domain.strategy.model.entity.RuleMatterEntity;

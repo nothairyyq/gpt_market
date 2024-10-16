@@ -9,7 +9,7 @@ import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
-import com.priska.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.priska.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.priska.types.enums.ResponseCode;
 import com.priska.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;

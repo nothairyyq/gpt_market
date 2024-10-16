@@ -1,8 +1,8 @@
-package com.priska.domain.strategy.service.rule.factory;
+package com.priska.domain.strategy.service.rule.filter.factory;
 
 import com.priska.domain.strategy.model.entity.RuleActionEntity;
 import com.priska.domain.strategy.service.annotation.LogicStrategy;
-import com.priska.domain.strategy.service.rule.ILogicFilter;
+import com.priska.domain.strategy.service.rule.filter.ILogicFilter;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.core.annotation.AnnotationUtils;

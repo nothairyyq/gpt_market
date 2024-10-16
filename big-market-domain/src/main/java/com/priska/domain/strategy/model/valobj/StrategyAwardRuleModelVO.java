@@ -1,6 +1,6 @@
 package com.priska.domain.strategy.model.valobj;
 
-import com.priska.domain.strategy.service.rule.factory.DefaultLogicFactory;
+import com.priska.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.priska.types.common.Constants;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

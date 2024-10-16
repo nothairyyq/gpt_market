@@ -5,15 +5,14 @@ import com.priska.domain.strategy.model.entity.RaffleAwardEntity;
 import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
 import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyArmory;
-import com.priska.domain.strategy.service.rule.impl.RuleLockLogicFilter;
-import com.priska.domain.strategy.service.rule.impl.RuleWeightLogicFilter;
+import com.priska.domain.strategy.service.rule.filter.impl.RuleLockLogicFilter;
+import com.priska.domain.strategy.service.rule.filter.impl.RuleWeightLogicFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
 
