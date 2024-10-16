@@ -37,7 +37,10 @@ public class StrategyArmoryDispatch implements  IStrategyArmory, IStrategyDispat
         //2. 权重策略配置-适用于rule_model字段含有rule_weight的权重规则配置
         StrategyEntity strategyEntity = repository.queryStrategyEntityByStrategyId(strategyId);
         String ruleWeight = strategyEntity.getRuleWeight();
-        if (null == ruleWeight) return false;
+        if (null == ruleWeight){
+            log.info("没有权重规则，直接返回，不再装配");
+            return false;
+        }
         StrategyRuleEntity strategyRuleEntity = repository.queryStrategyRule(strategyId,ruleWeight);
 
         //3.如果从strategy中得到的rulemodel有ruleweight但是strategyRule中查询不到ruleweight的数据，应该抛出异常

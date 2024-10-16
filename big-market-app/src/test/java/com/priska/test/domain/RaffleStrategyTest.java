@@ -50,8 +50,8 @@ public class RaffleStrategyTest {
     @Test
     public void test_performRaffle() {
         RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
-                .userId("user001")
-                .strategyId(100001L)
+                .userId("priska")
+                .strategyId(100003L)
                 .build();
 
         RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
