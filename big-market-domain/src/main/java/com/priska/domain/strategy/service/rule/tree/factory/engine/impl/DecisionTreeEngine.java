@@ -47,7 +47,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         //从起始节点开始遍历
         while(nextNode != null){
             //4. 获取当前节点的logicTreeNode
-            ILogicTreeNode logicTreeNode = logicTreeNodeGroup.get(ruleTreeNodeVO.getRuleKey());
+            ILogicTreeNode logicTreeNode = logicTreeNodeGroup.get(ruleTreeNodeVO.getRuleKey()); //ruleKey = “rule_lock”
             //5. 使用logicTreeNode的logic函数执行过滤操作并返回TreeActionEntity, 获取结果中的放行或接管结果
             DefaultTreeFactory.TreeActionEntity logicEntity = logicTreeNode.logic(userId,strategyId,awardId);
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = logicEntity.getRuleLogicCheckTypeVO();
@@ -66,7 +66,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
     //matterValue: 规则执行后的返回值，作为判断下一步的依据
     //treeNodeLineVOList: 当前节点的连线列表，决定了如何从当前节点移动到下一个节点
     public String nextNode(String matterValue, List<RuleTreeNodeLineVO> treeNodeLineVOList){
-        if(treeNodeLineVOList.isEmpty() || treeNodeLineVOList == null) return  null;
+        if(treeNodeLineVOList == null || treeNodeLineVOList.isEmpty()) return  null;
         //遍历当前节点的所有连线，调用decisionLogic检查是否满足条件。如果某条线的条件满足，返回下一个节点
         for (RuleTreeNodeLineVO nodeLineVO:treeNodeLineVOList){
             if (decisionLogic(matterValue, nodeLineVO)){
