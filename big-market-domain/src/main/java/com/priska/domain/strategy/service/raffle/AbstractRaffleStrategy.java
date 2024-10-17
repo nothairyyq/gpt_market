@@ -86,6 +86,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         //抽奖后：扣减完奖品库存后过滤，抽奖中拦截和无库存走兜底奖品
         StrategyAwardRuleModelVO strategyAwardRuleModelVO = repository.queryStrategyAwardRuleModelVO(strategyId, awardId);
         log.info("拿到strategyawardRuleModel:{}",strategyAwardRuleModelVO.getRuleModels());
+
         //5. 抽奖中 - 规则过滤
         //将只有是抽奖中的规则传入doCheckRaffleCenter函数中
         RuleActionEntity<RuleActionEntity.RaffleCenterEntity> ruleActionCenterEntity = this.doCheckRaffleCenterLogic(RaffleFactorEntity.builder()
