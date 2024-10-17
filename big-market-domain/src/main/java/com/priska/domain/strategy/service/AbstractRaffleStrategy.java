@@ -1,4 +1,4 @@
-package com.priska.domain.strategy.service.raffle;
+package com.priska.domain.strategy.service;
 
 import com.priska.domain.strategy.model.entity.RaffleAwardEntity;
 import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
