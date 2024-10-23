@@ -2,16 +2,9 @@ package com.priska.domain.strategy.service;
 
 import com.priska.domain.strategy.model.entity.RaffleAwardEntity;
 import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
-import com.priska.domain.strategy.model.entity.RuleActionEntity;
-import com.priska.domain.strategy.model.entity.StrategyEntity;
-import com.priska.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
-import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
-import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
-import com.priska.domain.strategy.service.rule.chain.ILogicChain;
 import com.priska.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import com.priska.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
 import com.priska.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import com.priska.types.enums.ResponseCode;
 import com.priska.types.exception.AppException;
@@ -31,13 +24,15 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
     //策略调度服务 -》 只负责抽奖处理，通过新增接口的方式，隔离职责，不需要使用方关心或调用抽奖的初始化
     protected IStrategyDispatch strategyDispatch;
     //抽奖责任链 - 》 从抽奖规则过滤中，将前置规则使用责任链模式处理
-    private final DefaultChainFactory defaultChainFactory;
-    //抽奖决策树 - 》 chou
+    protected final DefaultChainFactory defaultChainFactory;
+    //抽奖决策树 - 》 负责抽奖中到抽奖后的规则过滤，如抽奖到A奖品ID，之后要做次数的判断和库存的扣减等。
+    protected final DefaultTreeFactory defaultTreeFactory;
 
-    public AbstractRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch,DefaultChainFactory defaultChainFactory){
+    public AbstractRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch, DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory){
         this.repository = repository;
         this.strategyDispatch = strategyDispatch;
         this.defaultChainFactory = defaultChainFactory;
+        this.defaultTreeFactory = defaultTreeFactory;
     }
 
     @Override
