@@ -31,6 +31,7 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
     protected IStrategyDispatch strategyDispatch;
     //抽奖责任链 - 》 从抽奖规则过滤中，将前置规则使用责任链模式处理
     private final DefaultChainFactory defaultChainFactory;
+    //抽奖决策树 - 》 chou
 
     public AbstractRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch,DefaultChainFactory defaultChainFactory){
         this.repository = repository;
@@ -53,33 +54,6 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
         //3.通过责任链获得奖品id
         Integer awardId = logicChain.logic(userId, strategyId);
 
-//        //2. 策略查询
-//        StrategyEntity strategy = repository.queryStrategyEntityByStrategyId(strategyId);
-//
-//        //3. 抽奖前的规则过滤
-//        RuleActionEntity<RuleActionEntity.RaffleBeforeEntity> ruleActionEntity = this.doCheckRaffleBeforeLogic(RaffleFactorEntity.builder()
-//                .userId(userId)
-//                .strategyId(strategyId)
-//                .build(), strategy.ruleModels());
-//        if (RuleLogicCheckTypeVO.TAKE_OVER.getCode().equals(ruleActionEntity.getCode())){
-//            if (DefaultLogicFactory.LogicModel.RULE_BLACKLIST.getCode().equals(ruleActionEntity.getRuleModel())){
-//                //黑名单返回固定奖品id
-//                return RaffleAwardEntity.builder()
-//                        .awardId(ruleActionEntity.getData().getAwardId())
-//                        .build();
-//            } else if (DefaultLogicFactory.LogicModel.RULE_WIGHT.getCode().equals(ruleActionEntity.getRuleModel())) {
-//                //根据权重信息返回的进行抽奖
-//                RuleActionEntity.RaffleBeforeEntity raffleBeforeEntity = ruleActionEntity.getData();
-//                String ruleWeightValueKey = raffleBeforeEntity.getRuleWeightValueKey();
-//                Integer awardId = strategyDispatch.getRandomAwardId(strategyId, ruleWeightValueKey);
-//                return RaffleAwardEntity.builder()
-//                        .awardId(awardId)
-//                        .build();
-//            }
-//        }
-//
-//        //4. 默认抽奖流程
-//        Integer awardId = strategyDispatch.getRandomAwardId(strategyId);
 
         //4.拿到奖品id后，查询对应的奖品规则
         //抽奖中：awardId 对应的 ruleModel有可能的rule_lock和 rule_luck_award进行次数规则过滤
