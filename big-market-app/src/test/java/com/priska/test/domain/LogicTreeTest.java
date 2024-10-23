@@ -93,7 +93,7 @@ public class LogicTreeTest {
         //构建树引擎, 将树传入
         IDecisionTreeEngine treeEngine = defaultTreeFactory.openLogicTree(ruleTreeVO);
 
-        DefaultTreeFactory.StrategyAwardData data = treeEngine.process("priska",100001L,100);
+        DefaultTreeFactory.StrategyAwardVO data = treeEngine.process("priska",100001L,100);
         log.info("测试结果：{}", JSON.toJSONString(data));
     }
 }

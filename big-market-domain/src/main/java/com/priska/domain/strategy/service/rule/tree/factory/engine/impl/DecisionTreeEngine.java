@@ -33,8 +33,8 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
 
 
     @Override
-    public DefaultTreeFactory.StrategyAwardData process(String userId, Long strategyId, Integer awardId) {
-        DefaultTreeFactory.StrategyAwardData strategyAwardData = null;
+    public DefaultTreeFactory.StrategyAwardVO process(String userId, Long strategyId, Integer awardId) {
+        DefaultTreeFactory.StrategyAwardVO strategyAwardVO = null;
 
         //1. 获取根节点的ruleKey: nextNode
         String nextNode = ruleTreeVO.getTreeRootRuleNode();
@@ -51,7 +51,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
             //5. 使用logicTreeNode的logic函数执行过滤操作并返回TreeActionEntity, 获取结果中的放行或接管结果
             DefaultTreeFactory.TreeActionEntity logicEntity = logicTreeNode.logic(userId,strategyId,awardId);
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = logicEntity.getRuleLogicCheckTypeVO();
-            strategyAwardData = logicEntity.getStrategyAwardData();
+            strategyAwardVO = logicEntity.getStrategyAwardVO();
             log.info("决策树引擎【{}】treeId:{} node:{} code:{}", ruleTreeVO.getTreeName(), ruleTreeVO.getTreeId(), nextNode, ruleLogicCheckTypeVO.getCode());
 
             //6.获取下一个符合要求的节点
@@ -60,7 +60,7 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         }
 
 
-        return strategyAwardData;
+        return strategyAwardVO;
     }
 
     //matterValue: 规则执行后的返回值，作为判断下一步的依据
