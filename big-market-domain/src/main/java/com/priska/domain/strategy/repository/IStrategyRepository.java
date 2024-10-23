@@ -3,6 +3,7 @@ package com.priska.domain.strategy.repository;
 import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.entity.StrategyRuleEntity;
+import com.priska.domain.strategy.model.valobj.RuleTreeVO;
 import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 
 import java.math.BigDecimal;
@@ -38,4 +39,7 @@ public interface IStrategyRepository {
     String queryStrategyRuleValue(Long strategyId, String ruleModel);
 
     StrategyAwardRuleModelVO queryStrategyAwardRuleModelVO(Long strategyId, Integer awardId);
+
+    //根据treeId查询规则树结构信息，返回RuleTreeVO
+    RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
 }

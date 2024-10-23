@@ -1,23 +1,22 @@
 package com.priska.infrastructure.persistent.repository;
 
+import com.alibaba.fastjson.JSON;
 import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.entity.StrategyRuleEntity;
-import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
+import com.priska.domain.strategy.model.valobj.*;
 import com.priska.domain.strategy.repository.IStrategyRepository;
-import com.priska.infrastructure.persistent.dao.IStrategyAwardDao;
-import com.priska.infrastructure.persistent.dao.IStrategyDao;
-import com.priska.infrastructure.persistent.dao.IStrategyRuleDao;
-import com.priska.infrastructure.persistent.po.Strategy;
-import com.priska.infrastructure.persistent.po.StrategyAward;
-import com.priska.infrastructure.persistent.po.StrategyRule;
+import com.priska.infrastructure.persistent.dao.*;
+import com.priska.infrastructure.persistent.po.*;
 import com.priska.infrastructure.persistent.redis.IRedisService;
 import com.priska.types.common.Constants;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -25,6 +24,7 @@ import java.util.Map;
 * 实现策略仓储接口
 * */
 @Repository
+@Slf4j
 public class StrategyRepository implements IStrategyRepository {
 
     @Resource
@@ -33,6 +33,12 @@ public class StrategyRepository implements IStrategyRepository {
     private IStrategyAwardDao strategyAwardDao;
     @Resource
     private IStrategyRuleDao strategyRuleDao;
+    @Resource
+    private IRuleTreeDao ruleTreeDao;
+    @Resource
+    private IRuleTreeNodeDao ruleTreeNodeDao;
+    @Resource
+    private IRuleTreeNodeLineDao ruleTreeNodeLineDao;
     @Resource
     private IRedisService redisService;
 
@@ -156,5 +162,73 @@ public class StrategyRepository implements IStrategyRepository {
         return StrategyAwardRuleModelVO.builder()
                 .ruleModels(ruleModels)
                 .build();
+    }
+
+    @Override
+    public RuleTreeVO queryRuleTreeVOByTreeId(String treeId) {
+        //1.先从缓存中查找, 不为空的话直接返回
+        String cacheKey = Constants.RedisKey.RULE_TREE_VO_KEY+treeId;
+        RuleTreeVO ruleTreeVOCache = redisService.getValue(cacheKey);
+        if(ruleTreeVOCache != null)
+                return ruleTreeVOCache;
+
+        //2.从数据库MySQL中获取
+        //现根据树id获取ruleTree PO, ruleTreeNodes, ruleTreeNodeLines
+        RuleTree ruleTree = ruleTreeDao.queryRuleTreeByTreeId(treeId);
+        List<RuleTreeNode> ruleTreeNodes = ruleTreeNodeDao.queryRuleTreeNodeListByTreeId(treeId);
+        List<RuleTreeNodeLine> ruleTreeNodeLines = ruleTreeNodeLineDao.queryRuleTreeNodeLineListByTreeId(treeId);
+
+        //node line构造map{ruleNodeFrom:[对应的line列表]}给node用构造treeNodeMap 给tree用
+
+        //2.1将连线放到map结构中
+        // 1. tree node line 转换Map结构
+        // Map:{ruleNodeFrom:[对应的line列表]}
+        Map<String, List<RuleTreeNodeLineVO>> ruleTreeNodeLineMap = new HashMap<>();
+        for(RuleTreeNodeLine ruleTreeNodeLine : ruleTreeNodeLines){
+            //构建每一个line po对应的vo
+            RuleTreeNodeLineVO ruleTreeNodeLineVO = RuleTreeNodeLineVO.builder()
+                    .treeId(ruleTreeNodeLine.getTreeId())
+                    .ruleNodeFrom(ruleTreeNodeLine.getRuleNodeFrom())
+                    .ruleNodeTo(ruleTreeNodeLine.getRuleNodeTo())
+                    .ruleLimitType(RuleLimitTypeVO.valueOf(ruleTreeNodeLine.getRuleLimitType()))
+                    .ruleLimitValue(RuleLogicCheckTypeVO.valueOf(ruleTreeNodeLine.getRuleLimitValue()))
+                    .build();
+
+
+            //computeIfAbsent查看有没有ruleNodeFrom对应的列表，没有就新建一个，有的话之间返回
+            List<RuleTreeNodeLineVO> ruleTreeNodeLineVOList = ruleTreeNodeLineMap.computeIfAbsent(ruleTreeNodeLine.getRuleNodeFrom(), k -> new ArrayList<>());
+            ruleTreeNodeLineVOList.add(ruleTreeNodeLineVO);
+        }
+        log.info("新建的连线Map是:\n{}", JSON.toJSONString(ruleTreeNodeLineMap, true));
+
+
+        //2.2 将节点转换成map结构
+        //规则节点
+        //key:ruleKey, value: RuleTreeNode
+        //private Map<String, RuleTreeNodeVO> treeNodeMap;
+        Map<String, RuleTreeNodeVO> treeNodeVOMap = new HashMap<>();
+        for(RuleTreeNode ruleTreeNode : ruleTreeNodes){
+            RuleTreeNodeVO ruleTreeNodeVO = RuleTreeNodeVO.builder()
+                    .treeId(ruleTreeNode.getTreeId())
+                    .ruleDesc(ruleTreeNode.getRuleDesc())
+                    .ruleKey(ruleTreeNode.getRuleKey())
+                    .ruleValue(ruleTreeNode.getRuleValue())
+                    .treeNodeLineVOList(ruleTreeNodeLineMap.get(ruleTreeNode.getRuleKey()))
+                    .build();
+            treeNodeVOMap.put(ruleTreeNode.getRuleKey(),ruleTreeNodeVO);
+        }
+        log.info("构建的节点Map是:\n{}", JSON.toJSONString(treeNodeVOMap, true));
+
+        //2.3 构建rule tree
+        RuleTreeVO ruleTreeVODB = RuleTreeVO.builder()
+                .treeId(ruleTree.getTreeId())
+                .treeName(ruleTree.getTreeName())
+                .treeDesc(ruleTree.getTreeDesc())
+                .treeRootRuleNode(ruleTree.getTreeRootRuleKey())
+                .treeNodeMap(treeNodeVOMap)
+                .build();
+
+        redisService.setValue(cacheKey, ruleTreeVODB);
+        return ruleTreeVODB;
     }
 }

@@ -21,7 +21,7 @@ public class RuleTreeNodeVO {
 
     //规则树ID
     private String treeId;
-    //规则key
+    //规则key. rule_lock, rule_luck_award, rule_stock
     private String ruleKey;
     //规则描述
     private String ruleDesc;
