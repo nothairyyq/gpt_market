@@ -1,9 +1,6 @@
 package com.priska.domain.strategy.service.raffle;
 
-import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
-import com.priska.domain.strategy.model.entity.RuleActionEntity;
-import com.priska.domain.strategy.model.entity.RuleMatterEntity;
-import com.priska.domain.strategy.model.valobj.RuleLogicCheckTypeVO;
+
 import com.priska.domain.strategy.model.valobj.RuleTreeVO;
 import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
 import com.priska.domain.strategy.repository.IStrategyRepository;
@@ -11,8 +8,7 @@ import com.priska.domain.strategy.service.AbstractRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
 import com.priska.domain.strategy.service.rule.chain.ILogicChain;
 import com.priska.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
-import com.priska.domain.strategy.service.rule.filter.ILogicFilter;
-import com.priska.domain.strategy.service.rule.filter.factory.DefaultLogicFactory;
+
 import com.priska.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
 import com.priska.domain.strategy.service.rule.tree.factory.engine.IDecisionTreeEngine;
 import lombok.extern.slf4j.Slf4j;
@@ -31,8 +27,7 @@ import java.util.Map;
 @Slf4j
 public class DefaultRaffleStrategy extends AbstractRaffleStrategy {
 
-    @Resource
-    private DefaultLogicFactory logicFactory;
+
 
     public DefaultRaffleStrategy(IStrategyRepository repository, IStrategyDispatch strategyDispatch, DefaultChainFactory defaultChainFactory, DefaultTreeFactory defaultTreeFactory) {
         super(repository, strategyDispatch, defaultChainFactory, defaultTreeFactory);
