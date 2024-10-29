@@ -159,5 +159,18 @@ public class StrategyArmoryDispatch implements  IStrategyArmory, IStrategyDispat
         return  repository.getStrategyAwardAssemble(key,new SecureRandom().nextInt(rateRange));
     }
 
+    /**
+     * 根据策略ID和奖品ID，扣减奖品缓存库存
+     *
+     * @param strategyId 策略ID
+     * @param awardId    奖品ID
+     * @return 扣减结果
+     */
+    @Override
+    public Boolean subtractionAwardStock(Long strategyId, Integer awardId) {
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_KEY+strategyId+Constants.UNDERLINE+awardId;
+        return repository.subtractionAwardStock(cacheKey);
+    }
+
 
 }

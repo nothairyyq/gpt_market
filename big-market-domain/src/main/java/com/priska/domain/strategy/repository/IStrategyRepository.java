@@ -50,4 +50,12 @@ public interface IStrategyRepository {
     * @param awardCount 库存值
     * */
     void cacheStrategyAwardCount(String cacheKey, Integer awardCount);
+
+    /**
+     * 缓存key，decr 方式扣减库存
+     *
+     * @param cacheKey 缓存Key
+     * @return 扣减结果
+     */
+    Boolean subtractionAwardStock(String cacheKey);
 }

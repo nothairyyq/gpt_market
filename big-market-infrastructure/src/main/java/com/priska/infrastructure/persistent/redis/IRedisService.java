@@ -259,4 +259,11 @@ public interface IRedisService {
      */
     <T> RBloomFilter<T> getBloomFilter(String key);
 
+    /**
+     * 尝试为指定的键加锁，以控制并发访问
+     *
+     * @param key 键
+     * @return true 表示加锁成功，false 表示锁已存在，加锁失败
+     */
+    Boolean setNx(String key);
 }

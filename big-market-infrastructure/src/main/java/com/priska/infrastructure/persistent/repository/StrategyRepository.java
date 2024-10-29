@@ -238,4 +238,30 @@ public class StrategyRepository implements IStrategyRepository {
         if (redisService.isExists(cacheKey)) return;
         redisService.setAtomicLong(cacheKey, awardCount);
     }
+
+    /**
+     * 缓存key，decr 方式扣减库存
+     *
+     * @param cacheKey 缓存Key
+     * @return 扣减结果
+     */
+    @Override
+    public Boolean subtractionAwardStock(String cacheKey) {
+        //将目前对应的库存值进行原子操作减1，并返回decr之后的库存值给surplus
+        long surplus = redisService.decr(cacheKey);
+        if (surplus < 0){
+            //库存被扣减到0一下了，发生错误了
+            //恢复库存为0个
+            redisService.setValue(cacheKey,0);
+            return false;
+        }
+        //组装库存锁的key。 cacheKey_库存扣减后的值
+        String lockKey = cacheKey + Constants.UNDERLINE + surplus;
+        Boolean lock = redisService.setNx(lockKey);
+        //如果加锁失败
+        if (!lock){
+            log.info("策略奖品库存加锁失败 {}", lockKey);
+        }
+        return lock;
+    }
 }

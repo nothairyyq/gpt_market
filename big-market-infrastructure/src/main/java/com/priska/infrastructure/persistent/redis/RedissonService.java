@@ -176,4 +176,10 @@ public class RedissonService implements IRedisService {
     }
 
 
+    @Override
+    public Boolean setNx(String key) {
+        return redissonClient.getBucket(key).trySet("lock");
+    }
+
+
 }
