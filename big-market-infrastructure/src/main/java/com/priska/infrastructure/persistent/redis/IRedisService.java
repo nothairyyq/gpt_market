@@ -8,6 +8,21 @@ import org.redisson.api.*;
 public interface IRedisService {
 
     /**
+     * 设置值
+     *
+     * @param key   key 键
+     * @param value 值
+     */
+    void setAtomicLong(String key, long value);
+
+    /**
+     * 获取值
+     *
+     * @param key   key 键
+     */
+    Long getAtomicLong(String key);
+
+    /**
      * 设置指定 key 的值
      *
      * @param key   键

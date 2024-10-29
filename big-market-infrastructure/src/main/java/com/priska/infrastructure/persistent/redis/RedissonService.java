@@ -15,6 +15,27 @@ public class RedissonService implements IRedisService {
     @Resource
     private RedissonClient redissonClient;
 
+    /**
+     * 设置值
+     *
+     * @param key   key 键
+     * @param value 值
+     */
+    @Override
+    public void setAtomicLong(String key, long value) {
+        redissonClient.getAtomicLong(key).set(value);
+    }
+
+    /**
+     * 获取值
+     *
+     * @param key key 键
+     */
+    @Override
+    public Long getAtomicLong(String key) {
+        return redissonClient.getAtomicLong(key).get();
+    }
+
     public <T> void setValue(String key, T value) {
         redissonClient.<T>getBucket(key).set(value);
     }

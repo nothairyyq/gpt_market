@@ -42,4 +42,12 @@ public interface IStrategyRepository {
 
     //根据treeId查询规则树结构信息，返回RuleTreeVO
     RuleTreeVO queryRuleTreeVOByTreeId(String treeId);
+
+    /*
+    * 缓存奖品库存
+    *
+    * @param cacheKey key
+    * @param awardCount 库存值
+    * */
+    void cacheStrategyAwardCount(String cacheKey, Integer awardCount);
 }
