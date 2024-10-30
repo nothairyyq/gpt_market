@@ -17,14 +17,9 @@ import org.springframework.stereotype.Component;
 public class RuleLuckAwardLogicTreeNode implements ILogicTreeNode {
 
 
+
     @Override
-    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId) {
-        return DefaultTreeFactory.TreeActionEntity.builder()
-                .ruleLogicCheckTypeVO(RuleLogicCheckTypeVO.TAKE_OVER)
-                .strategyAwardVO(DefaultTreeFactory.StrategyAwardVO.builder()
-                        .awardId(101)
-                        .awardRuleValue("1,100")
-                        .build())
-                .build();
+    public DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue) {
+        return null;
     }
 }

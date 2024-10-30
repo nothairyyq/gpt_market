@@ -48,8 +48,11 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
         while(nextNode != null){
             //4. 获取当前节点的logicTreeNode
             ILogicTreeNode logicTreeNode = logicTreeNodeGroup.get(ruleTreeNodeVO.getRuleKey()); //ruleKey = “rule_lock”
+            //获取当前节点的ruleValue
+            String ruleValue = ruleTreeNodeVO.getRuleValue();
+
             //5. 使用logicTreeNode的logic函数执行过滤操作并返回TreeActionEntity, 获取结果中的放行或接管结果
-            DefaultTreeFactory.TreeActionEntity logicEntity = logicTreeNode.logic(userId,strategyId,awardId);
+            DefaultTreeFactory.TreeActionEntity logicEntity = logicTreeNode.logic(userId,strategyId,awardId, ruleValue);
             RuleLogicCheckTypeVO ruleLogicCheckTypeVO = logicEntity.getRuleLogicCheckTypeVO();
             strategyAwardVO = logicEntity.getStrategyAwardVO();
             log.info("决策树引擎【{}】treeId:{} node:{} code:{}", ruleTreeVO.getTreeName(), ruleTreeVO.getTreeId(), nextNode, ruleLogicCheckTypeVO.getCode());

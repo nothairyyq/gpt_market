@@ -5,6 +5,7 @@ import com.priska.domain.strategy.model.entity.StrategyEntity;
 import com.priska.domain.strategy.model.entity.StrategyRuleEntity;
 import com.priska.domain.strategy.model.valobj.RuleTreeVO;
 import com.priska.domain.strategy.model.valobj.StrategyAwardRuleModelVO;
+import com.priska.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -58,4 +59,11 @@ public interface IStrategyRepository {
      * @return 扣减结果
      */
     Boolean subtractionAwardStock(String cacheKey);
+
+    /**
+     * 写入奖品库存消费队列
+     *
+     * @param strategyAwardStockKeyVO 对象值对象
+     */
+    void awardStockConsumeSendQueue(StrategyAwardStockKeyVO strategyAwardStockKeyVO);
 }

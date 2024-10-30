@@ -11,5 +11,5 @@ import com.priska.domain.strategy.service.rule.tree.factory.DefaultTreeFactory;
  * @create: 2024-10-16
  */
 public interface ILogicTreeNode {
-    DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId);
+    DefaultTreeFactory.TreeActionEntity logic(String userId, Long strategyId, Integer awardId, String ruleValue);
 }

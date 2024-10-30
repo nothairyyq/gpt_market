@@ -11,6 +11,9 @@ import com.priska.infrastructure.persistent.po.*;
 import com.priska.infrastructure.persistent.redis.IRedisService;
 import com.priska.types.common.Constants;
 import lombok.extern.slf4j.Slf4j;
+import org.redisson.api.RBlockingDeque;
+import org.redisson.api.RBlockingQueue;
+import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
 
 import javax.annotation.Resource;
@@ -19,6 +22,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 /*
 * 实现策略仓储接口
@@ -263,5 +267,22 @@ public class StrategyRepository implements IStrategyRepository {
             log.info("策略奖品库存加锁失败 {}", lockKey);
         }
         return lock;
+    }
+
+    /**
+     * 写入奖品库存消费队列
+     *
+     * @param strategyAwardStockKeyVO 对象值对象
+     */
+    @Override
+    public void awardStockConsumeSendQueue(StrategyAwardStockKeyVO strategyAwardStockKeyVO) {
+        //构建缓存键
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_QUEUE_KEY;
+        //获取阻塞队列，用于在延迟时间到达后存储需要处理的任务
+        RBlockingQueue<StrategyAwardStockKeyVO> blockingQueue = redisService.getBlockingQueue(cacheKey);
+        //获取延迟队列，strategyAwardStockKeyVO在等待后，转移到阻塞队列
+        RDelayedQueue<StrategyAwardStockKeyVO> delayedQueue = redisService.getDelayedQueue(blockingQueue);
+        //3秒将对象放入阻塞队列
+        delayedQueue.offer(strategyAwardStockKeyVO, 3, TimeUnit.SECONDS);
     }
 }
