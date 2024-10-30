@@ -18,7 +18,7 @@ import org.apache.commons.lang3.StringUtils;
  * @create: 2024-07-13
  */
 @Slf4j
-public abstract class AbstractRaffleStrategy implements IRaffleStrategy {
+public abstract class AbstractRaffleStrategy implements IRaffleStrategy, IRaffleStock {
     //策略仓储服务 -》 domain层类比一个大厨，仓储层提供米面粮油
     protected IStrategyRepository repository;
     //策略调度服务 -》 只负责抽奖处理，通过新增接口的方式，隔离职责，不需要使用方关心或调用抽奖的初始化

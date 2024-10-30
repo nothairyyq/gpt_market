@@ -285,4 +285,29 @@ public class StrategyRepository implements IStrategyRepository {
         //3秒将对象放入阻塞队列
         delayedQueue.offer(strategyAwardStockKeyVO, 3, TimeUnit.SECONDS);
     }
+
+    /**
+     * 获取奖品库存消费队列
+     */
+    @Override
+    public StrategyAwardStockKeyVO takeQueueValue() throws InterruptedException {
+        //构建缓存键
+        String cacheKey = Constants.RedisKey.STRATEGY_AWARD_COUNT_QUEUE_KEY;
+        RBlockingQueue<StrategyAwardStockKeyVO> destinationQueue = redisService.getBlockingQueue(cacheKey);
+        return destinationQueue.poll();
+    }
+
+    /**
+     * 更新奖品库存消耗
+     *
+     * @param strategyId 策略ID
+     * @param awardId    奖品ID
+     */
+    @Override
+    public void updateStrategyAwardStock(Long strategyId, Integer awardId) {
+        StrategyAward strategyAward = new StrategyAward();
+        strategyAward.setStrategyId(strategyId);
+        strategyAward.setAwardId(awardId);
+        strategyAwardDao.updateStrategyAwardStock(strategyAward);
+    }
 }
