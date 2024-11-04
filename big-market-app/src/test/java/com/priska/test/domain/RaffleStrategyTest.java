@@ -7,6 +7,7 @@ import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyArmory;
 import com.priska.domain.strategy.service.rule.chain.impl.RuleWeightLogicChain;
 
+import com.priska.domain.strategy.service.rule.tree.impl.RuleLockLogicTreeNode;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
@@ -16,6 +17,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.util.ReflectionTestUtils;
 
 import javax.annotation.Resource;
+import java.util.concurrent.CountDownLatch;
 
 /**
  * @program: IntelliJ IDEA
@@ -33,18 +35,36 @@ public class RaffleStrategyTest {
     private IRaffleStrategy raffleStrategy;
     @Resource
     private RuleWeightLogicChain ruleWeightLogicChain;
+    @Resource
+    private RuleLockLogicTreeNode ruleLockLogicTreeNode;
 
     @Before
     public void setUp() {
         // 策略装配 100001、100002、100003
-//        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100001L));
-//        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100002L));
-//        log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100003L));
+
         log.info("测试结果：{}", strategyArmory.assembleLotteryStrategy(100006L));
 
         // 通过反射 mock 规则中的值
-        ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 40500L);
+        ReflectionTestUtils.setField(ruleWeightLogicChain, "userScore", 4900L);
+        ReflectionTestUtils.setField(ruleLockLogicTreeNode, "userRaffleCount", 10L);
 
+    }
+
+    @Test
+    public void test_performRaffle_ruleStock() throws InterruptedException{
+        for (int i = 0; i < 10; i++) {
+            RaffleFactorEntity raffleFactorEntity = RaffleFactorEntity.builder()
+                    .userId("priska")
+                    .strategyId(100006L)
+                    .build();
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(raffleFactorEntity);
+
+            log.info("请求参数：{}", JSON.toJSONString(raffleFactorEntity));
+            log.info("测试结果：{}", JSON.toJSONString(raffleAwardEntity));
+        }
+
+        // 等待 UpdateAwardStockJob 消费队列
+        new CountDownLatch(1).await();
     }
 
     @Test
