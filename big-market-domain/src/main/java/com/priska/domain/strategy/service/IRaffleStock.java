@@ -10,12 +10,7 @@ import com.priska.domain.strategy.model.valobj.StrategyAwardStockKeyVO;
  */
 public interface IRaffleStock {
 
-    /**
-     * 获取奖品库存消耗队列
-     *
-     * @return 奖品库存Key信息
-     * @throws InterruptedException 异常
-     */
+
     StrategyAwardStockKeyVO takeQueueValue() throws InterruptedException;
 
     /**
