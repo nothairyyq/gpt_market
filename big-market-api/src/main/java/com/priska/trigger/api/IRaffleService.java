@@ -6,6 +6,8 @@ import com.priska.trigger.api.dto.RaffleRequestDTO;
 import com.priska.trigger.api.dto.RaffleResponseDTO;
 import com.priska.types.model.Response;
 
+import java.util.List;
+
 /**
  * @program: IntelliJ IDEA
  * @description: 抽奖服务接口
@@ -28,7 +30,7 @@ public interface IRaffleService {
      * @param requestDTO 抽奖奖品列表查询请求参数
      * @return RaffleAwardListResponseDTO 奖品列表响应实体{awardId, title, subtitle, sort}
      */
-    Response<RaffleAwardListResponseDTO> queryRaffleAwardList(RaffleAwardListRequestDTO requestDTO);
+    Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(RaffleAwardListRequestDTO requestDTO);
 
     /**
      * 随机抽奖接口

@@ -1,7 +1,8 @@
 package com.priska.trigger.http;
 
 import com.alibaba.fastjson2.JSON;
-import com.priska.domain.strategy.service.IRaffleStrategy;
+import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
+import com.priska.domain.strategy.service.IRaffleAward;
 import com.priska.domain.strategy.service.armory.IStrategyArmory;
 import com.priska.trigger.api.IRaffleService;
 import com.priska.trigger.api.dto.RaffleAwardListRequestDTO;
@@ -17,6 +18,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @program: IntelliJ IDEA
@@ -32,6 +35,8 @@ public class RaffleController implements IRaffleService {
 
     @Resource
     private IStrategyArmory strategyArmory;
+    @Resource
+    private IRaffleAward raffleAward;
 
     /**
      * 策略装配接口
@@ -51,7 +56,7 @@ public class RaffleController implements IRaffleService {
                     .info(ResponseCode.SUCCESS.getInfo())
                     .data(armoryStatus)
                     .build();
-            log.info("抽奖策略装配结束 strategyID: {} response:{}",strategyId, JSON.toJSON(response));
+            log.info("抽奖策略装配结束 strategyID: {} response:{}",strategyId, JSON.toJSONString(response));
             return response;
         }catch (Exception e){
             log.error("抽奖策略装配失败 strategyID:{}",strategyId,e);
@@ -64,13 +69,41 @@ public class RaffleController implements IRaffleService {
 
     /**
      * 查询抽奖奖品列表的接口
+     * <a href="http://localhost:8091/api/v1/raffle/query_raffle_award_list">/api/v1/raffle/query_raffle_award_list</a>
      *
      * @param requestDTO 抽奖奖品列表查询请求参数
      * @return RaffleAwardListResponseDTO 奖品列表响应实体{awardId, title, subtitle, sort}
      */
+    @RequestMapping(value = "query_raffle_award_list", method = RequestMethod.GET)
     @Override
-    public Response<RaffleAwardListResponseDTO> queryRaffleAwardList(RaffleAwardListRequestDTO requestDTO) {
-        return null;
+    public Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(RaffleAwardListRequestDTO requestDTO) {
+        try {
+            log.info("查询抽奖奖品列表开始 strategyID：{}", requestDTO.getStrategyId());
+
+            List<StrategyAwardEntity> strategyAwardEntities = raffleAward.queryRaffleStrategyAwardList(requestDTO.getStrategyId());
+            List<RaffleAwardListResponseDTO> raffleAwardListResponseDTOList = new ArrayList<>(strategyAwardEntities.size());
+            for (StrategyAwardEntity strategyAwardEntity : strategyAwardEntities){
+                raffleAwardListResponseDTOList.add(RaffleAwardListResponseDTO.builder()
+                                .awardId(strategyAwardEntity.getAwardId())
+                                .awardTitle(strategyAwardEntity.getAwardTitle())
+                                .awardSubtitle(strategyAwardEntity.getAwardSubtitle())
+                                .sort(strategyAwardEntity.getSort())
+                                .build());
+            }
+            Response<List<RaffleAwardListResponseDTO>> response = Response.<List<RaffleAwardListResponseDTO>>builder()
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .data(raffleAwardListResponseDTOList)
+                    .build();
+            log.info("查询抽奖奖品列表结束 strategyID: {} response: {}", requestDTO.getStrategyId(), JSON.toJSONString(response));
+            return response;
+        }catch (Exception e){
+            log.error("查询抽奖奖品列表配置失败 strategyId：{}", requestDTO.getStrategyId(), e);
+            return Response.<List<RaffleAwardListResponseDTO>>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
     }
 
     /**
