@@ -2,6 +2,7 @@ package com.priska.domain.strategy.service;
 
 import com.priska.domain.strategy.model.entity.RaffleAwardEntity;
 import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
+import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.repository.IStrategyRepository;
 import com.priska.domain.strategy.service.armory.IStrategyDispatch;
 import com.priska.domain.strategy.service.rule.chain.factory.DefaultChainFactory;
@@ -49,9 +50,8 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy{
         DefaultChainFactory.StrategyAwardVO chainStrategyAwardVO = raffleLogicChain(userId, strategyId);
         log.info("抽奖策略计算-责任链 {} {} {} {}", userId, strategyId, chainStrategyAwardVO.getAwardId(), chainStrategyAwardVO.getLogicModel());
         if(!DefaultChainFactory.LogicModel.RULE_DEFAULT.getCode().equals(chainStrategyAwardVO.getLogicModel())){
-            return RaffleAwardEntity.builder()
-                    .awardId(chainStrategyAwardVO.getAwardId())
-                    .build();
+            // TODO awardConfig 暂时为空。黑名单指定积分奖品，后续需要在库表中配置上对应的1积分值，并获取到。
+            return buildRaffleAwardEntity(strategyId, chainStrategyAwardVO.getAwardId(), null);
         }
 
         //3.根据奖品ID 进行规则树抽奖过滤
@@ -60,9 +60,16 @@ public abstract class AbstractRaffleStrategy implements IRaffleStrategy{
         log.info("抽奖策略计算-规则树 {} {} {} {}", userId, strategyId, treeStrategyAwardVO.getAwardId(), treeStrategyAwardVO.getAwardRuleValue());
 
 
+        //4.返回抽奖结果
+        return buildRaffleAwardEntity(strategyId, treeStrategyAwardVO.getAwardId(), treeStrategyAwardVO.getAwardRuleValue());
+    }
+
+    private RaffleAwardEntity buildRaffleAwardEntity(Long strategyId, Integer awardId, String awardConfig){
+        StrategyAwardEntity strategyAward = repository.queryStrategyAwardEntity(strategyId,awardId);
         return RaffleAwardEntity.builder()
-                .awardId(treeStrategyAwardVO.getAwardId())
-                .awardConfig(treeStrategyAwardVO.getAwardRuleValue())
+                .awardId(awardId)
+                .awardConfig(awardConfig)
+                .sort(strategyAward.getSort())
                 .build();
     }
 

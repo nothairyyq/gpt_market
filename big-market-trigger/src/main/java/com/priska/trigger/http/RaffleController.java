@@ -1,8 +1,11 @@
 package com.priska.trigger.http;
 
 import com.alibaba.fastjson2.JSON;
+import com.priska.domain.strategy.model.entity.RaffleAwardEntity;
+import com.priska.domain.strategy.model.entity.RaffleFactorEntity;
 import com.priska.domain.strategy.model.entity.StrategyAwardEntity;
 import com.priska.domain.strategy.service.IRaffleAward;
+import com.priska.domain.strategy.service.IRaffleStrategy;
 import com.priska.domain.strategy.service.armory.IStrategyArmory;
 import com.priska.trigger.api.IRaffleService;
 import com.priska.trigger.api.dto.RaffleAwardListRequestDTO;
@@ -10,12 +13,10 @@ import com.priska.trigger.api.dto.RaffleAwardListResponseDTO;
 import com.priska.trigger.api.dto.RaffleRequestDTO;
 import com.priska.trigger.api.dto.RaffleResponseDTO;
 import com.priska.types.enums.ResponseCode;
+import com.priska.types.exception.AppException;
 import com.priska.types.model.Response;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.ArrayList;
@@ -37,6 +38,8 @@ public class RaffleController implements IRaffleService {
     private IStrategyArmory strategyArmory;
     @Resource
     private IRaffleAward raffleAward;
+    @Resource
+    private IRaffleStrategy raffleStrategy;
 
     /**
      * 策略装配接口
@@ -108,12 +111,44 @@ public class RaffleController implements IRaffleService {
 
     /**
      * 随机抽奖接口
-     *
+     *<a href="http://localhost:8091/api/v1/raffle/random_raffle">/api/v1/raffle/random_raffle</a>
      * @param requestDTO 随机抽奖请求参数
      * @return RaffleResponseDTO 随机抽奖结果{awardId, awardIndex}
      */
+    @RequestMapping(value = "random_raffle", method = RequestMethod.POST)
     @Override
-    public Response<RaffleResponseDTO> randomRaffle(RaffleRequestDTO requestDTO) {
-        return null;
+    public Response<RaffleResponseDTO> randomRaffle(@RequestBody RaffleRequestDTO requestDTO) {
+
+        try {
+            log.info("随机抽奖开始 strategyID: {}", requestDTO.getStrategyId());
+            //调用抽奖接口
+            RaffleAwardEntity raffleAwardEntity = raffleStrategy.performRaffle(RaffleFactorEntity.builder()
+                    .userId("system")
+                    .strategyId(requestDTO.getStrategyId())
+                    .build());
+            //实体类-->DTO-->结果实体
+            Response<RaffleResponseDTO> response = Response.<RaffleResponseDTO>builder()
+                    .code(ResponseCode.SUCCESS.getCode())
+                    .info(ResponseCode.SUCCESS.getInfo())
+                    .data(RaffleResponseDTO.builder()
+                            .awardId(raffleAwardEntity.getAwardId())
+                            .awardIndex(raffleAwardEntity.getSort())
+                            .build())
+                    .build();
+            log.info("随机抽奖完成 strategyID: {} response: {}",requestDTO.getStrategyId(), response);
+            return response;
+        }catch (AppException e){
+            log.error("随机抽奖失败 strategyID：{} {}", requestDTO.getStrategyId(), e.getInfo());
+            return Response.<RaffleResponseDTO>builder()
+                    .code(e.getCode())
+                    .info(e.getInfo())
+                    .build();
+        }catch (Exception e){
+            log.info("随机抽奖失败 strategyID:{}", requestDTO.getStrategyId(), e);
+            return Response.<RaffleResponseDTO>builder()
+                    .code(ResponseCode.UN_ERROR.getCode())
+                    .info(ResponseCode.UN_ERROR.getInfo())
+                    .build();
+        }
     }
 }

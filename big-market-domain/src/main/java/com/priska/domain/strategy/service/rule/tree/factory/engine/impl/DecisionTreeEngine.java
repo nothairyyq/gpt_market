@@ -76,7 +76,8 @@ public class DecisionTreeEngine implements IDecisionTreeEngine {
                 return nodeLineVO.getRuleNodeTo();
             }
         }
-        throw new RuntimeException("决策树引擎，nextNode计算失败，没有找到可以执行的节点");
+        //throw new RuntimeException("决策树引擎，nextNode计算失败，没有找到可以执行的节点");
+        return null;
     }
 
     //matterValue是规则执行结果（如ALLOW/TAKE_OVER）
