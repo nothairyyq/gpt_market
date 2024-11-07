@@ -77,9 +77,9 @@ public class RaffleController implements IRaffleService {
      * @param requestDTO 抽奖奖品列表查询请求参数
      * @return RaffleAwardListResponseDTO 奖品列表响应实体{awardId, title, subtitle, sort}
      */
-    @RequestMapping(value = "query_raffle_award_list", method = RequestMethod.GET)
+    @RequestMapping(value = "query_raffle_award_list", method = RequestMethod.POST)
     @Override
-    public Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(RaffleAwardListRequestDTO requestDTO) {
+    public Response<List<RaffleAwardListResponseDTO>> queryRaffleAwardList(@RequestBody RaffleAwardListRequestDTO requestDTO) {
         try {
             log.info("查询抽奖奖品列表开始 strategyID：{}", requestDTO.getStrategyId());
 

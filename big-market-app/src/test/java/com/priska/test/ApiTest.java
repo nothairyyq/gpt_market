@@ -20,18 +20,7 @@ public class ApiTest {
 
     @Test
     public void test() {
-        RMap<Object, Object> map = redisService.getMap("strategy_id_100001");
-        map.put(1,101);
-        map.put(2,101);
-        map.put(3,101);
-        map.put(4,102);
-        map.put(5,102);
-        map.put(6,102);
-        map.put(7,103);
-        map.put(8,103);
-        map.put(9,104);
-        map.put(10,105);
-        log.info("测试结果: {}", redisService.getFromMap("strategy_id_100001",10),toString());
+
     }
 
 }
