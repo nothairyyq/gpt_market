@@ -10,12 +10,13 @@ import com.priska.infrastructure.persistent.dao.*;
 import com.priska.infrastructure.persistent.po.*;
 import com.priska.infrastructure.persistent.redis.IRedisService;
 import com.priska.types.common.Constants;
+import com.priska.types.enums.ResponseCode;
+import com.priska.types.exception.AppException;
 import lombok.extern.slf4j.Slf4j;
-import org.redisson.api.RBlockingDeque;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
-
+import com.priska.types.enums.ResponseCode.
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -92,7 +93,11 @@ public class StrategyRepository implements IStrategyRepository {
 
     @Override
     public int getRateRange(String key) {
-        return redisService.getValue(Constants.RedisKey.STRATEGY_RATE_RANGE_KEY+key);
+        String cacheKey = Constants.RedisKey.STRATEGY_RATE_RANGE_KEY+key;
+        if(!redisService.isExists(cacheKey)){
+            throw new AppException(ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getCode(), cacheKey+Constants.COLON+ResponseCode.UN_ASSEMBLED_STRATEGY_ARMORY.getInfo());
+        }
+        return redisService.getValue(cacheKey);
     }
 
     @Override
