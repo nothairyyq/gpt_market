@@ -16,7 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.redisson.api.RBlockingQueue;
 import org.redisson.api.RDelayedQueue;
 import org.springframework.stereotype.Repository;
-import com.priska.types.enums.ResponseCode.
+import com.priska.types.enums.ResponseCode;
 import javax.annotation.Resource;
 import java.math.BigDecimal;
 import java.util.ArrayList;
