@@ -212,7 +212,7 @@ public class StrategyRepository implements IStrategyRepository {
             List<RuleTreeNodeLineVO> ruleTreeNodeLineVOList = ruleTreeNodeLineMap.computeIfAbsent(ruleTreeNodeLine.getRuleNodeFrom(), k -> new ArrayList<>());
             ruleTreeNodeLineVOList.add(ruleTreeNodeLineVO);
         }
-        log.info("新建的连线Map是:\n{}", JSON.toJSONString(ruleTreeNodeLineMap, true));
+        //log.info("新建的连线Map是:\n{}", JSON.toJSONString(ruleTreeNodeLineMap, true));
 
 
         //2.2 将节点转换成map结构
@@ -230,7 +230,7 @@ public class StrategyRepository implements IStrategyRepository {
                     .build();
             treeNodeVOMap.put(ruleTreeNode.getRuleKey(),ruleTreeNodeVO);
         }
-        log.info("构建的节点Map是:\n{}", JSON.toJSONString(treeNodeVOMap, true));
+        //log.info("构建的节点Map是:\n{}", JSON.toJSONString(treeNodeVOMap, true));
 
         //2.3 构建rule tree
         RuleTreeVO ruleTreeVODB = RuleTreeVO.builder()
