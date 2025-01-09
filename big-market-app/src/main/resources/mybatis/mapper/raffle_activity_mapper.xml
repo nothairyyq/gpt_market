@@ -18,4 +18,10 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
+    <select id="queryRaffleActivityByActivityId" parameterType="java.lang.Long" resultMap="dataMap">
+        select activity_name,activity_desc,begin_date_time,end_date_time,stock_count,stock_count_surplus,activity_count_id,strategy_id,state
+        from raffle_activity
+        where activity_id = #{activityId}
+    </select>
+
 </mapper>
