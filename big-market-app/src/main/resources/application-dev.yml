@@ -33,7 +33,7 @@ mini-db-router:
       tbCount: 4  # 分表数量： 每个库4张表
       default: db00 #默认数据源：db00作为配置库
       routerKey: userId #路由键：使用userId进行分库分表
-      list: db01, db02 # 分库列表：指定两个分库
+      list: db01,db02 # 分库列表：指定两个分库
       db00:
         driver-class-name: com.mysql.cj.jdbc.Driver
         url: jdbc:mysql://127.0.0.1:13306/big_market?useUnicode=true&characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&serverTimezone=UTC&useSSL=true
