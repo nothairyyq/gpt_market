@@ -15,4 +15,15 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
+    <insert id="insert" parameterType="com.priska.infrastructure.persistent.po.RaffleActivityOrder">
+        insert into raffle_activity_order(user_id, activity_id, activity_name, strategy_id, order_id, order_time, state, create_time, update_time)
+        values (#{userId},#{activityId},#{activityName},#{strategyId},#{orderId},#{orderTime},#{state},now(), now())
+    </insert>
+
+    <select id="queryRaffleActivityOrderByUserId" parameterType="java.lang.String" resultMap="dataMap">
+        select user_id, activity_id, activity_name, strategy_id, order_id, order_time, state
+        from raffle_activity_order
+        where user_id = #{userId}
+    </select>
+
 </mapper>
