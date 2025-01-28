@@ -1,4 +1,4 @@
-package com.priska.test.infrastructure;
+package com.priska.test.infrastructure.strategy;
 
 import com.alibaba.fastjson.JSON;
 import com.priska.domain.strategy.model.valobj.RuleTreeVO;

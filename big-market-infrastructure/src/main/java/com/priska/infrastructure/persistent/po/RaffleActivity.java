@@ -18,9 +18,6 @@ public class RaffleActivity {
     private String activityDesc;
     private Date beginDateTime;
     private Date endDateTime;
-    private Integer stockCount;
-    private Integer stockCountSurplus;
-    private Long activityCountId;
     private Long strategyId;
     private String state;
     private Date createTime;

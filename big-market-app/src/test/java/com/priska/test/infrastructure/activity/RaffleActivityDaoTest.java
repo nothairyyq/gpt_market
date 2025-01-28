@@ -1,4 +1,4 @@
-package com.priska.test.infrastructure;
+package com.priska.test.infrastructure.activity;
 
 import com.alibaba.fastjson2.JSON;
 import com.priska.infrastructure.persistent.dao.IRaffleActivityDao;
