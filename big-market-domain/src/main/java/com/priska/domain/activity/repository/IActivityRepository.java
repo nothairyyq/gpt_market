@@ -1,5 +1,9 @@
 package com.priska.domain.activity.repository;
 
+import com.priska.domain.activity.model.entity.ActivityCountEntity;
+import com.priska.domain.activity.model.entity.ActivityEntity;
+import com.priska.domain.activity.model.entity.ActivitySkuEntity;
+
 /**
  * @program: IntelliJ IDEA
  * @description: 活动仓储接口
@@ -9,4 +13,8 @@ package com.priska.domain.activity.repository;
  * @create: 2025-01-28
  */
 public interface IActivityRepository {
+    ActivitySkuEntity queryActivitySku(Long sku);
+    ActivityEntity queryRaffleActivityByActivityId(Long activityId);
+    ActivityCountEntity queryRaffleActivityCountByActivityCountId(Long activityCountId);
+
 }
