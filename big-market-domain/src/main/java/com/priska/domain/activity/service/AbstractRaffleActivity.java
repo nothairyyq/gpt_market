@@ -67,7 +67,7 @@ public abstract class AbstractRaffleActivity extends RaffleActivitySupport imple
 
         //4. 构建订单聚合对象，使用之前查到的信息
         CreateOrderAggregate createOrderAggregate = buildOrderAggregate(skuRechargeEntity, activitySkuEntity, activityEntity, activityCountEntity);
-        //5. 保存订单聚合对象
+        //5. 保存订单聚合对象，入库
         doSaveOrder(createOrderAggregate);
         //6. 返回单号
         return createOrderAggregate.getActivityOrderEntity().getOrderId();

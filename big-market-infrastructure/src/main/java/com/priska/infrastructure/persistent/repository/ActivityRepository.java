@@ -1,8 +1,11 @@
 package com.priska.infrastructure.persistent.repository;
 
+import cn.bugstack.middleware.db.router.annotation.DBRouter;
+import cn.bugstack.middleware.db.router.strategy.IDBRouterStrategy;
 import com.priska.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.priska.domain.activity.model.entity.ActivityCountEntity;
 import com.priska.domain.activity.model.entity.ActivityEntity;
+import com.priska.domain.activity.model.entity.ActivityOrderEntity;
 import com.priska.domain.activity.model.entity.ActivitySkuEntity;
 import com.priska.domain.activity.model.valobj.ActivityStateVO;
 import com.priska.domain.activity.repository.IActivityRepository;
@@ -12,6 +15,7 @@ import com.priska.infrastructure.persistent.dao.IRaffleActivityOrderDao;
 import com.priska.infrastructure.persistent.dao.IRaffleActivitySkuDao;
 import com.priska.infrastructure.persistent.po.RaffleActivity;
 import com.priska.infrastructure.persistent.po.RaffleActivityCount;
+import com.priska.infrastructure.persistent.po.RaffleActivityOrder;
 import com.priska.infrastructure.persistent.po.RaffleActivitySku;
 import com.priska.infrastructure.persistent.redis.IRedisService;
 import com.priska.types.common.Constants;
@@ -35,6 +39,10 @@ public class ActivityRepository implements IActivityRepository {
     private IRaffleActivityDao raffleActivityDao;
     @Resource
     private IRaffleActivityCountDao raffleActivityCountDao;
+    @Resource
+    private IDBRouterStrategy dbRouter;
+
+
     @Override
     public ActivitySkuEntity queryActivitySku(Long sku) {
         RaffleActivitySku raffleActivitySku = raffleActivitySkuDao.queryActivitySku(sku);
@@ -88,7 +96,17 @@ public class ActivityRepository implements IActivityRepository {
 
     @Override
     public void doSaveOrder(CreateOrderAggregate createOrderAggregate) {
-
+        try{
+            //通过创建订单聚合对象获得活动订单实体对象，再通过实体对象构建订单po
+            ActivityOrderEntity activityOrderEntity = createOrderAggregate.getActivityOrderEntity();
+            RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
+            raffleActivityOrder.setActivityId(activityOrderEntity.getActivityId());
+            raffleActivityOrder.setActivityName(activityOrderEntity.getActivityName());
+            raffleActivityOrder.setStrategyId(activityOrderEntity.getStrategyId());
+            raffleActivityOrder.setOrderId(activityOrderEntity.getOrderId());
+        }finally {
+            dbRouter.clear();
+        }
     }
 
 
