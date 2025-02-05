@@ -1,5 +1,6 @@
 package com.priska.infrastructure.persistent.repository;
 
+import com.priska.domain.activity.model.aggregate.CreateOrderAggregate;
 import com.priska.domain.activity.model.entity.ActivityCountEntity;
 import com.priska.domain.activity.model.entity.ActivityEntity;
 import com.priska.domain.activity.model.entity.ActivitySkuEntity;
@@ -83,6 +84,11 @@ public class ActivityRepository implements IActivityRepository {
                 .build();
         redisService.setValue(cacheKey, activityCountEntity);
         return activityCountEntity;
+    }
+
+    @Override
+    public void doSaveOrder(CreateOrderAggregate createOrderAggregate) {
+
     }
 
 

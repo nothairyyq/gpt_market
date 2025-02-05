@@ -1,6 +1,7 @@
 package com.priska.domain.activity.model.entity;
 
 import com.priska.domain.activity.model.valobj.ActivityStateVO;
+import com.priska.domain.activity.model.valobj.OrderStateVO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -63,5 +64,11 @@ public class ActivityOrderEntity {
      */
     private Integer monthCount;
 
-    private ActivityStateVO state;
+    private OrderStateVO state;
+
+    /**
+     * 业务仿重ID - 外部透传的，确保幂等
+     */
+    private String outBusinessNo;
+
 }
