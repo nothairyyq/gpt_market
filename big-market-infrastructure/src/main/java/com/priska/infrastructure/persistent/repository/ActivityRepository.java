@@ -13,10 +13,7 @@ import com.priska.infrastructure.persistent.dao.IRaffleActivityCountDao;
 import com.priska.infrastructure.persistent.dao.IRaffleActivityDao;
 import com.priska.infrastructure.persistent.dao.IRaffleActivityOrderDao;
 import com.priska.infrastructure.persistent.dao.IRaffleActivitySkuDao;
-import com.priska.infrastructure.persistent.po.RaffleActivity;
-import com.priska.infrastructure.persistent.po.RaffleActivityCount;
-import com.priska.infrastructure.persistent.po.RaffleActivityOrder;
-import com.priska.infrastructure.persistent.po.RaffleActivitySku;
+import com.priska.infrastructure.persistent.po.*;
 import com.priska.infrastructure.persistent.redis.IRedisService;
 import com.priska.types.common.Constants;
 import org.springframework.stereotype.Repository;
@@ -98,12 +95,34 @@ public class ActivityRepository implements IActivityRepository {
     public void doSaveOrder(CreateOrderAggregate createOrderAggregate) {
         try{
             //通过创建订单聚合对象获得活动订单实体对象，再通过实体对象构建订单po
+            //订单对象
             ActivityOrderEntity activityOrderEntity = createOrderAggregate.getActivityOrderEntity();
             RaffleActivityOrder raffleActivityOrder = new RaffleActivityOrder();
+            raffleActivityOrder.setUserId(activityOrderEntity.getUserId());
+            raffleActivityOrder.setSku(activityOrderEntity.getSku());
             raffleActivityOrder.setActivityId(activityOrderEntity.getActivityId());
             raffleActivityOrder.setActivityName(activityOrderEntity.getActivityName());
             raffleActivityOrder.setStrategyId(activityOrderEntity.getStrategyId());
             raffleActivityOrder.setOrderId(activityOrderEntity.getOrderId());
+            raffleActivityOrder.setOrderTime(activityOrderEntity.getOrderTime());
+            raffleActivityOrder.setTotalCount(activityOrderEntity.getTotalCount());
+            raffleActivityOrder.setDayCount(activityOrderEntity.getDayCount());
+            raffleActivityOrder.setMonthCount(activityOrderEntity.getMonthCount());
+            raffleActivityOrder.setState(raffleActivityOrder.getState());
+            raffleActivityOrder.setOutBusinessNo(activityOrderEntity.getOutBusinessNo());
+
+            //账户对象po
+            RaffleActivityAccount raffleActivityAccount = new RaffleActivityAccount();
+            raffleActivityAccount.setUserId(createOrderAggregate.getUserId());
+            raffleActivityAccount.setActivityId(createOrderAggregate.getActivityId());
+            raffleActivityAccount.setTotalCount(createOrderAggregate.getTotalCount());
+            raffleActivityAccount.setDayCount(createOrderAggregate.getDayCount());
+            raffleActivityAccount.setMonthCount(createOrderAggregate.getMonthCount());
+            raffleActivityAccount.setMonthCountSurplus(createOrderAggregate.getMonthCount());
+            raffleActivityAccount.setTotalCountSurplus(createOrderAggregate.getTotalCount());
+            raffleActivityAccount.setDayCountSurplus(createOrderAggregate.getDayCount());
+            // 以用户ID作为切分键，通过 doRouter 设定路由【这样就保证了下面的操作，都是同一个链接下，也就保证了事务的特性】
+            dbRouter.doRouter(raffleActivityOrder.getUserId());
         }finally {
             dbRouter.clear();
         }

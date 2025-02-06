@@ -24,6 +24,7 @@ public class RaffleActivityOrder {
     private Integer dayCount;
     private Integer monthCount;
     private String state;
+    private String outBusinessNo;
     private Date createTime;
     private Date updateTime;
 }
