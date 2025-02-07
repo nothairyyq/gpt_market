@@ -154,7 +154,7 @@ public class ActivityRepository implements IActivityRepository {
         raffleActivityOrder.setTotalCount(activityOrderEntity.getTotalCount());
         raffleActivityOrder.setDayCount(activityOrderEntity.getDayCount());
         raffleActivityOrder.setMonthCount(activityOrderEntity.getMonthCount());
-        raffleActivityOrder.setState(raffleActivityOrder.getState());
+        raffleActivityOrder.setState(activityOrderEntity.getState().getCode());
         raffleActivityOrder.setOutBusinessNo(activityOrderEntity.getOutBusinessNo());
         return raffleActivityOrder;
     }

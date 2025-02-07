@@ -58,6 +58,7 @@ public abstract class AbstractRaffleActivity extends RaffleActivitySupport imple
         ActivitySkuEntity activitySkuEntity = queryActivitySku(skuRechargeEntity.getSku());
         //2.2 用activityId查activityEntity
         ActivityEntity activityEntity = queryRaffleActivityByActivityId(activitySkuEntity.getActivityId());
+        log.info("Activity Id:{}",activityEntity.getActivityId());
         //2.3用activityCountId查activityCountEntity
         ActivityCountEntity activityCountEntity = queryRaffleActivityCountByActivityCountId(activitySkuEntity.getActivityCountId());
 
@@ -67,6 +68,7 @@ public abstract class AbstractRaffleActivity extends RaffleActivitySupport imple
 
         //4. 构建订单聚合对象，使用之前查到的信息
         CreateOrderAggregate createOrderAggregate = buildOrderAggregate(skuRechargeEntity, activitySkuEntity, activityEntity, activityCountEntity);
+
         //5. 保存订单聚合对象，入库
         doSaveOrder(createOrderAggregate);
         //6. 返回单号

@@ -5,6 +5,7 @@ import com.priska.domain.activity.model.entity.*;
 import com.priska.domain.activity.model.valobj.OrderStateVO;
 import com.priska.domain.activity.repository.IActivityRepository;
 import com.priska.domain.activity.service.rule.factory.DefaultActionChainFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.Date;
  * @create: 2025-01-29
  */
 @Service
+@Slf4j
 public class RaffleActivityService extends AbstractRaffleActivity {
 
     public RaffleActivityService(IActivityRepository activityRepository, DefaultActionChainFactory defaultActionChainFactory) {
@@ -39,10 +41,9 @@ public class RaffleActivityService extends AbstractRaffleActivity {
                 .state(OrderStateVO.completed)
                 .outBusinessNo(skuRechargeEntity.getOutBusinessNo())
                 .build();
-
         return CreateOrderAggregate.builder()
                 .userId(activityOrderEntity.getUserId())
-                .activityId(activityEntity.getActivityId())
+                .activityId(activityOrderEntity.getActivityId())
                 .totalCount(activityOrderEntity.getTotalCount())
                 .dayCount(activityOrderEntity.getDayCount())
                 .monthCount(activityOrderEntity.getMonthCount())
