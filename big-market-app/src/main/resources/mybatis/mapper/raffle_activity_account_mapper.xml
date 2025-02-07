@@ -16,4 +16,16 @@
         <result column="update_time" property="updateTime"/>
     </resultMap>
 
+    <update id="updateAccountQuota" parameterType="com.priska.infrastructure.persistent.po.RaffleActivityAccount">
+        update raffle_activity_account
+        set
+            total_count = total_count + #{totalCount},
+            total_count_surplus = total_count_surplus + #{total_count_surplus},
+            day_count = day_count + #{day_count},
+            day_count_surplus = day_count_surplus + #{day_count_surplus},
+            month_count = month_count + #{month_count},
+            month_count_surplus = month_count_surplus + #{month_count_surplus},
+            update_time = now()
+        where user_id = #{userId} and activity_id = #{activityId}
+    </update>
 </mapper>
