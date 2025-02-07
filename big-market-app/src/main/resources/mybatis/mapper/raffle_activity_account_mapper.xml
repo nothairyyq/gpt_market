@@ -28,4 +28,10 @@
             update_time = now()
         where user_id = #{userId} and activity_id = #{activityId}
     </update>
+    
+    <insert id="insert" parameterType="com.priska.infrastructure.persistent.po.RaffleActivityAccount">
+        insert into raffle_activity_account(user_id, activity_id, total_count, total_count_surplus, day_count, day_count_surplus, month_count, month_count_surplus, create_time, update_time) values
+            (#{userId}, #{activityId}, #{totalCount}, #{totalCountSurplus}, #{dayCount},
+             #{dayCountSurplus}, #{monthCount}, #{monthCountSurplus}, now(), now())
+    </insert>
 </mapper>
